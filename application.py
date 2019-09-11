@@ -16,4 +16,8 @@ def index():
 
 @app.route("/results", methods=["POST"])
 def results():
-    return render_template("results.html")
+    book = request.form.get("book")
+    books = db.execute(f"SELECT * FROM books WHERE title LIKE '%{book}%'").fetchall()
+    if books is None:  # TODO: this is not working!
+        return render_template("results.html", books="Your search came up empty!!!")
+    return render_template("results.html", books=books)
